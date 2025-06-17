@@ -62,6 +62,7 @@ async def ddns():
                 "token": ""
             }
             yaml.safe_dump(config, file)
+            logger.info("Successfully generated a config file at path ./config.yaml")
         return
         
     with open(config_file_path, mode='r', encoding='utf-8') as file:
