@@ -78,6 +78,7 @@ async def ddns():
                 "ipv6": ipv6
             })
            response.raise_for_status()
+           logger.info(response.content)
            logger.info(f"Updated DDNS: \nIPv4: {ipv4}\nIPv6: {ipv6}")
         except Exception as e:
             logger.error("Failed to update DDNS!")
