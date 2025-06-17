@@ -1,11 +1,13 @@
 base_url = "https://ipv4.dynv6.com"
+config_file_path = "./config.yaml"
 
 import asyncio
 from typing import Tuple
 import requests
 from netifaces import interfaces, ifaddresses, AF_INET, AF_INET6
 from loguru import logger
-
+import yaml
+import os
 
 def get_ipv6_addresses():
     res = []
@@ -52,9 +54,19 @@ def get_candidate_addresses() -> Tuple[str, str]:
 
 
 async def ddns():
-    with open("./config.yaml", mode='r', encoding='utf-8') as file:
-        import yaml
+    if not os.path.exists(config_file_path):
+        logger.error("No config file at path ./config.yaml")
+        with open(config_file_path, mode='w+', encoding='utf-8') as file:
+            config = {
+                "zone": "",
+                "token": ""
+            }
+            yaml.safe_dump(config, file)
+        return
+        
+    with open(config_file_path, mode='r', encoding='utf-8') as file:
         config = yaml.safe_load(file)
+    
     while True:
         try:
            ipv4, ipv6 = get_candidate_addresses()
